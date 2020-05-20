@@ -38,20 +38,20 @@ function getVideoLink(vid, timeStr=null) {
     }
 }
 
-async function fillTable(table) {
+function renderTable(table, data) {
     const tbody = table.querySelector('tbody');
-    const rowTemplate = document.querySelector(`template[data-action=${table.dataset.action}]`);
+    const rowTemplate = document.querySelector(`template[data-action="${table.dataset.action}"]`);
 
     // placeholder rows
-    tbody.innerHTML = '';
-    for (let index = 0; index < 10; ++index) {
-        const row = rowTemplate.content.cloneNode(true);
-        row.querySelector('th').textContent = index + 1;
-        tbody.appendChild(row);
+    if (!data) {
+        tbody.innerHTML = '';
+        for (let index = 0; index < 10; ++index) {
+            const row = rowTemplate.content.cloneNode(true);
+            row.querySelector('th').textContent = index + 1;
+            tbody.appendChild(row);
+        }
+        return;
     }
-
-    const response = await fetch('api.py?action=' + table.dataset.action);
-    const data = await response.json();
 
     tbody.innerHTML = '';
     for (const [index, el] of data.entries()) {
@@ -96,6 +96,34 @@ async function fillTable(table) {
     }
 }
 
+async function initTable(table) {
+    renderTable(table, null);
+
+    const response = await fetch('api.py?action=' + table.dataset.action);
+    const data = await response.json();
+
+    if (table.dataset.variant) {
+        renderTable(table, data[table.dataset.variant]);
+        table.querySelector('thead tr').addEventListener('click', event => {
+            const th = event.target.closest('th[data-variant]');
+            if (!th) {
+                return;
+            }
+
+            event.preventDefault();
+            table.dataset.variant = th.dataset.variant;
+            renderTable(table, data[table.dataset.variant]);
+
+            for (const other of table.querySelectorAll('thead .current-variant')) {
+                other.classList.remove('current-variant');
+            }
+            th.classList.add('current-variant');
+        });
+    } else {
+        renderTable(table, data);
+    }
+}
+
 for (const table of document.querySelectorAll('table[data-action]')) {
-    fillTable(table);
+    initTable(table);
 }

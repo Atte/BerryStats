@@ -32,15 +32,15 @@
         <div class="row">
 
             <div class="col-12 col-lg-8">
-                <table data-action="chatters" class="table">
+                <table data-action="chatters" data-variant="lines" class="table">
                     <thead>
                         <tr>
                             <th scope="col" class="num">#</th>
                             <th scope="col" class="widen" colspan="2">Nick</th>
-                            <th scope="col" class="num">Lines</th>
-                            <th scope="col" class="num">Characters</th>
-                            <th scope="col" class="num">Emotes</th>
-                            <!--th scope="col" class="emote">Fav.</th-->
+                            <th scope="col" class="num clickable current-variant" data-variant="lines">Lines</th>
+                            <th scope="col" class="num clickable" data-variant="characters">Characters</th>
+                            <th scope="col" class="num clickable" data-variant="emotes">Emotes</th>
+                            <th scope="col" class="emote">Fav.</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -50,10 +50,10 @@
                         <th class="num" scope="row"></th>
                         <td data-prop="_id" class="usercolor"><div>&nbsp;</div></td>
                         <td data-prop="_id" class="widen"></td>
-                        <td data-prop="count" class="num"></td>
+                        <td data-prop="lines" class="num"></td>
                         <td data-prop="characters" class="num"></td>
                         <td data-prop="emotes" class="num"></td>
-                        <!--td data-prop="fav" data-title-prop="favCount" class="emote"></td-->
+                        <td data-prop="fav" data-title-prop="favCount" class="emote"></td>
                     </tr>
                 </template>
             </div>

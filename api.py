@@ -27,10 +27,11 @@ def handle_usercolors(environ, start_response):
         if attrs.get('color')
     )
 
-SUFFIX = [
-    { '$sort': OrderedDict([('count', -1), ('latest', -1)]) },
-    { '$limit': 10 },
-]
+def suffix(field='count', length=10):
+    return [
+        { '$sort': OrderedDict([(field, -1), ('latest', -1)]) },
+        { '$limit': length },
+    ]
 
 ACTIONS = {
     'videos': {
@@ -43,7 +44,7 @@ ACTIONS = {
                 'videoid': { '$first': '$video.videoid' },
                 'videotype': { '$first': '$video.videotype' },
             } },
-        ] + SUFFIX
+        ] + suffix()
     },
     'drinks': {
         'collection': 'chatMsg',
@@ -54,7 +55,7 @@ ACTIONS = {
                 'count': { '$sum': 1 },
                 'latest': { '$max': '$_time' },
             } },
-        ] + SUFFIX
+        ] + suffix()
     },
     'emotes': {
         'collection': 'chatMsg',
@@ -74,16 +75,17 @@ ACTIONS = {
                 'count': { '$sum': 1 },
                 'latest': { '$max': '$_time' },
             } },
-        ] + SUFFIX
+        ] + suffix()
     },
     'chatters': {
         'collection': 'chatMsg',
+        'postprocess': next,
         'pipeline': [
             { '$match': { 'msg.emote': False } },
             { '$group': {
                 '_id': '$msg.nick',
-                'count': { '$sum': 1 },
                 'latest': { '$max': '$_time' },
+                'lines': { '$sum': 1 },
                 'characters': { '$sum': { '$strLenBytes': '$msg.msg' } },
                 'emotes': { '$sum': { '$size': { '$regexFindAll': {
                     'input': '$msg.msg',
@@ -104,8 +106,8 @@ ACTIONS = {
                     'nick': '$_id',
                     'fav': { '$arrayElemAt': ['$fav.captures', 1] },
                 },
-                'count': { '$first': '$count' },
                 'latest': { '$first': '$latest' },
+                'lines': { '$first': '$lines' },
                 'characters': { '$first': '$characters' },
                 'emotes': { '$first': '$emotes' },
                 'favCount': { '$sum': 1 },
@@ -113,18 +115,23 @@ ACTIONS = {
             { '$sort': OrderedDict([('_id.nick', 1), ('favCount', -1)]) },
             { '$group': {
                 '_id': '$_id.nick',
-                'count': { '$first': '$count' },
                 'latest': { '$first': '$latest' },
+                'lines': { '$first': '$lines' },
                 'characters': { '$first': '$characters' },
                 'emotes': { '$first': '$emotes' },
                 'favCount': { '$first': '$favCount' },
                 'fav': { '$first': '$_id.fav' },
             } },
-        ] + SUFFIX
+            { '$facet': {
+                'lines': suffix('lines'),
+                'characters': suffix('characters'),
+                'emotes': suffix('emotes'),
+            } },
+        ]
     },
     'connected': {
         'collection': 'numConnected',
-        'postprocess': lambda docs: [[doc['_id'], doc['count']] for doc in docs],
+        'postprocess': lambda cursor: [[doc['_id'], doc['count']] for doc in cursor],
         'pipeline': [
             { '$group': {
                 '_id': { '$dateToString': {
@@ -145,7 +152,7 @@ ACTIONS = {
                 'count': { '$max': '$num' },
             } },
             { '$sort': { '_id': 1 } },
-        ] # no SUFFIX
+        ]
     },
     'usercolors': {
         'handler': handle_usercolors,

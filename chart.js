@@ -22,7 +22,7 @@ const chart = Highcharts.chart('connected', {
 });
 chart.showLoading();
 
-async function fillChart() {
+async function initChart() {
     const response = await fetch('api.py?action=connected');
     const data = await response.json();
     for (const el of data) {
@@ -31,4 +31,4 @@ async function fillChart() {
     chart.series[0].setData(data);
     chart.hideLoading();
 }
-fillChart();
+initChart();

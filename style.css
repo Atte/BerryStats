@@ -41,3 +41,15 @@ td.usercolor {
     height: 100%;
     background-color: var(--usercolor);
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    text-decoration: underline;
+}
+
+th.current-variant::before {
+    content: '↑ ';
+}
