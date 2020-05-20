@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>BerryStats</title>
+
+    <meta property="og:title" content="BerryStats" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://atte.fi/berrystats/" />
+    <meta property="og:image" content="https://dl.atte.fi/bt_favicon_64x64.png" />
+    <meta property="og:description" content="weekly BerryTube statistics" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="https://dl.atte.fi/bt_favicon_64x64.png" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highcharts/8.1.0/css/highcharts.min.css" integrity="sha256-hc/lwKGP/3ZME9dCihbN8z/6STue6qruc+PWsd6JfRk=" crossorigin="anonymous" />
+    
+    <style id="usercolors"></style>
+    <link rel="stylesheet" href="api.py?action=usercolors" />
+    <link rel="stylesheet" href="style.css" />
+
+    <script type="module" src="chart.js"></script>
+    <script type="module" src="tables.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Weekly BerryTube Statistics</h1>
+
+        <div id="connected"></div>
+
+        <div class="row">
+
+            <div class="col-12 col-lg-8">
+                <table data-action="chatters" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="num">#</th>
+                            <th scope="col" class="widen" colspan="2">Nick</th>
+                            <th scope="col" class="num">Lines</th>
+                            <th scope="col" class="num">Characters</th>
+                            <th scope="col" class="num">Emotes</th>
+                            <!--th scope="col" class="emote">Fav.</th-->
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <template data-action="chatters">
+                    <tr>
+                        <th class="num" scope="row"></th>
+                        <td data-prop="_id" class="usercolor"><div>&nbsp;</div></td>
+                        <td data-prop="_id" class="widen"></td>
+                        <td data-prop="count" class="num"></td>
+                        <td data-prop="characters" class="num"></td>
+                        <td data-prop="emotes" class="num"></td>
+                        <!--td data-prop="fav" data-title-prop="favCount" class="emote"></td-->
+                    </tr>
+                </template>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <table data-action="emotes" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="num">#</th>
+                            <th scope="col" class="widen" colspan="2">Emote</th>
+                            <th scope="col" class="num">Uses</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <template data-action="emotes">
+                    <tr>
+                        <th class="num" scope="row"></th>
+                        <td data-prop="_id" class="emote"></td>
+                        <td data-prop="_id" class="widen"></td>
+                        <td data-prop="count" class="num"></td>
+                    </tr>
+                </template>
+            </div>
+
+            <div class="col-12 col-lg-8">
+                <table data-action="videos" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="num">#</th>
+                            <th scope="col" class="widen">Video title</th>
+                            <th scope="col" class="num">Plays</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <template data-action="videos">
+                    <tr>
+                        <th class="num" scope="row"></th>
+                        <td data-prop="_id" class="widen videolink"></td>
+                        <td data-prop="count" class="num"></td>
+                    </tr>
+                </template>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <table data-action="drinks" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="num">#</th>
+                            <th scope="col" class="widen">Drink call</th>
+                            <th scope="col" class="num">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <template data-action="drinks">
+                    <tr>
+                        <th class="num" scope="row"></th>
+                        <td data-prop="_id" class="widen"></td>
+                        <td data-prop="count" class="num"></td>
+                    </tr>
+                </template>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

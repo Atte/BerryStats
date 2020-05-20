@@ -1,0 +1,43 @@
+#connected {
+    width: 100%;
+    height: 200px;
+}
+
+th,
+td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+th.widen,
+td.widen {
+    width: 100%;
+}
+
+th.num,
+td.num {
+    text-align: right;
+}
+
+td.emote {
+    text-align: center;
+    min-width: 56px; /* 32px + 2 * 12px (=padding) */
+}
+
+td.emote img {
+    width: auto;
+    height: 32px;
+    margin-top: -0.75rem;
+    margin-bottom: -0.75rem;
+}
+
+td.usercolor {
+    padding: 0.8rem 0 0 0;
+}
+
+.usercolor > div {
+    width: 10px;
+    height: 100%;
+    background-color: var(--usercolor);
+}
