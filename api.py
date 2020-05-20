@@ -62,7 +62,6 @@ ACTIONS = {
             { '$project': {
                 '_id': False,
                 '_time': True,
-                #'nick': '$msg.nick',
                 'emotes': { '$regexFindAll': {
                     'input': '$msg.msg',
                     'regex': EMOTE_REGEX,
@@ -74,45 +73,7 @@ ACTIONS = {
                 '_id': { '$arrayElemAt': ['$emotes.captures', 1] },
                 'count': { '$sum': 1 },
                 'latest': { '$max': '$_time' },
-                #'nicks': { '$push': '$nick' },
             } },
-        #] + SUFFIX + [
-            # emote most used by user:
-            # { '$unwind': '$nicks' },
-            # { '$group': {
-            #     '_id': { 'emote': '$_id', 'nick': '$nicks' },
-            #     'count': { '$first': '$count' },
-            #     'latest': { '$first': '$count' },
-            #     'userCount': { '$sum': 1 },
-            # } },
-            # { '$sort': OrderedDict([('count', -1), ('userCount', -1)]) },
-            # { '$group': {
-            #     '_id': '$_id.emote',
-            #     'count': { '$first': '$count' },
-            #     'latest': { '$first': '$latest' },
-            #     'user': { '$first': '$_id.nick' },
-            #     'userCount': { '$first': '$userCount' },
-            # } },
-            # emote alias resolving:
-            # { '$sort': { 'count': -1 } },
-            # { '$limit': 100 },
-            # { '$lookup': {
-            #     'from': 'berrymotes',
-            #     'let': { 'name': '$_id' },
-            #     'pipeline': [
-            #         { '$match': { '$expr': { '$in': ['$$name', '$names'] } } },
-            #         { '$limit': 1 },
-            #     ],
-            #     'as': 'berrymote'
-            # } },
-            # { '$set': {
-            #     'berrymote': { '$arrayElemAt': ['$berrymote', 0] },
-            # } },
-            # { '$group': {
-            #     '_id': { '$arrayElemAt': ['$berrymote.names', 0] },
-            #     'count': { '$sum': '$count' },
-            #     'latest': { '$max': '$latest' },
-            # } },
         ] + SUFFIX
     },
     'chatters': {
@@ -129,37 +90,36 @@ ACTIONS = {
                     'regex': EMOTE_REGEX,
                     'options': 'i',
                 } } } },
-                # 'fav': { '$push': { '$regexFindAll': {
-                #     'input': '$msg.msg',
-                #     'regex': EMOTE_REGEX,
-                #     'options': 'i',
-                # } } },
+                'fav': { '$push': { '$regexFindAll': {
+                    'input': '$msg.msg',
+                    'regex': EMOTE_REGEX,
+                    'options': 'i',
+                } } },
             } },
-        #] + SUFFIX + [
-            # user's favorite emote:
-            # { '$unwind': '$fav' },
-            # { '$unwind': '$fav' },
-            # { '$group': {
-            #     '_id': {
-            #         'nick': '$_id',
-            #         'fav': { '$arrayElemAt': ['$fav.captures', 1] },
-            #     },
-            #     'count': { '$first': '$count' },
-            #     'latest': { '$first': '$latest' },
-            #     'characters': { '$first': '$characters' },
-            #     'emotes': { '$first': '$emotes' },
-            #     'favCount': { '$sum': 1 },
-            # } },
-            # { '$sort': OrderedDict([('_id.nick', 1), ('favCount', -1)]) },
-            # { '$group': {
-            #     '_id': '$_id.nick',
-            #     'count': { '$first': '$count' },
-            #     'latest': { '$first': '$latest' },
-            #     'characters': { '$first': '$characters' },
-            #     'emotes': { '$first': '$emotes' },
-            #     'favCount': { '$first': '$favCount' },
-            #     'fav': { '$first': '$_id.fav' },
-            # } },
+            # favorite emote:
+            { '$unwind': '$fav' },
+            { '$unwind': '$fav' },
+            { '$group': {
+                '_id': {
+                    'nick': '$_id',
+                    'fav': { '$arrayElemAt': ['$fav.captures', 1] },
+                },
+                'count': { '$first': '$count' },
+                'latest': { '$first': '$latest' },
+                'characters': { '$first': '$characters' },
+                'emotes': { '$first': '$emotes' },
+                'favCount': { '$sum': 1 },
+            } },
+            { '$sort': OrderedDict([('_id.nick', 1), ('favCount', -1)]) },
+            { '$group': {
+                '_id': '$_id.nick',
+                'count': { '$first': '$count' },
+                'latest': { '$first': '$latest' },
+                'characters': { '$first': '$characters' },
+                'emotes': { '$first': '$emotes' },
+                'favCount': { '$first': '$favCount' },
+                'fav': { '$first': '$_id.fav' },
+            } },
         ] + SUFFIX
     },
     'connected': {
