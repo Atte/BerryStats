@@ -27,20 +27,31 @@
     <div class="container">
         <h1>Weekly BerryTube Statistics</h1>
 
+        <!-- connected -->
         <div id="connected"></div>
 
         <div class="row">
 
             <div class="col-12 col-lg-8">
-                <table data-action="chatters" data-variant="lines" class="table">
+                <!-- chatters -->
+                <table data-action="chatters" data-variant="lines" data-rows="21" class="table">
                     <thead>
                         <tr>
                             <th scope="col" class="num">#</th>
                             <th scope="col" class="widen" colspan="2">Nick</th>
-                            <th scope="col" class="num clickable current-variant" data-variant="lines">Lines</th>
-                            <th scope="col" class="num clickable" data-variant="characters">Characters</th>
-                            <th scope="col" class="num clickable" data-variant="emotes">Emotes</th>
-                            <th scope="col" class="emote">Fav.</th>
+                            <th scope="col" class="num current-variant" data-variant="lines">
+                                <span class="variant-indicator">↑</span>
+                                <span>Lines</span>
+                            </th>
+                            <th scope="col" class="num" data-variant="characters">
+                                <span class="variant-indicator">↑</span>
+                                <span>Characters</span>
+                            </th>
+                            <th scope="col" class="num" data-variant="emotes">
+                                <span class="variant-indicator">↑</span>
+                                <span>Emotes</span>
+                            </th>
+                            <th scope="col" class="emote" title="favorite emote">Fav.</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -51,35 +62,62 @@
                         <td data-prop="_id" class="usercolor"><div>&nbsp;</div></td>
                         <td data-prop="_id" class="widen"></td>
                         <td data-prop="lines" class="num"></td>
-                        <td data-prop="characters" class="num"></td>
+                        <td data-prop="characters" class="num" data-title-prop="avgCharacters" title=" characters per line"></td>
                         <td data-prop="emotes" class="num"></td>
-                        <td data-prop="fav" data-title-prop="favCount" class="emote"></td>
+                        <td data-prop="fav" class="emote" data-title-prop="favCount" title=" uses"></td>
                     </tr>
                 </template>
             </div>
 
             <div class="col-12 col-lg-4">
-                <table data-action="emotes" class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="num">#</th>
-                            <th scope="col" class="widen" colspan="2">Emote</th>
-                            <th scope="col" class="num">Uses</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <template data-action="emotes">
-                    <tr>
-                        <th class="num" scope="row"></th>
-                        <td data-prop="_id" class="emote"></td>
-                        <td data-prop="_id" class="widen"></td>
-                        <td data-prop="count" class="num"></td>
-                    </tr>
-                </template>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-lg-12">
+                        <!-- emotes -->
+                        <table data-action="emotes" class="table mb-lg-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="num">#</th>
+                                    <th scope="col" class="widen" colspan="2">Emote</th>
+                                    <th scope="col" class="num">Uses</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <template data-action="emotes">
+                            <tr>
+                                <th class="num" scope="row"></th>
+                                <td data-prop="_id" class="emote"></td>
+                                <td data-prop="_id" class="widen"></td>
+                                <td data-prop="count" class="num"></td>
+                            </tr>
+                        </template>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-lg-12">
+                        <!-- drinks -->
+                        <table data-action="drinks" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="num">#</th>
+                                    <th scope="col" class="widen">Drink call</th>
+                                    <th scope="col" class="num">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <template data-action="drinks">
+                            <tr>
+                                <th class="num" scope="row"></th>
+                                <td data-prop="_id" class="widen"></td>
+                                <td data-prop="count" class="num"></td>
+                            </tr>
+                        </template>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12 col-lg-8">
+                <!-- videos -->
                 <table data-action="videos" class="table">
                     <thead>
                         <tr>
@@ -94,26 +132,6 @@
                     <tr>
                         <th class="num" scope="row"></th>
                         <td data-prop="_id" class="widen videolink"></td>
-                        <td data-prop="count" class="num"></td>
-                    </tr>
-                </template>
-            </div>
-
-            <div class="col-12 col-lg-4">
-                <table data-action="drinks" class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="num">#</th>
-                            <th scope="col" class="widen">Drink call</th>
-                            <th scope="col" class="num">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <template data-action="drinks">
-                    <tr>
-                        <th class="num" scope="row"></th>
-                        <td data-prop="_id" class="widen"></td>
                         <td data-prop="count" class="num"></td>
                     </tr>
                 </template>

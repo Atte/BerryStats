@@ -3,6 +3,10 @@
     height: 200px;
 }
 
+.table thead th {
+    border-top: none;
+}
+
 th,
 td {
     overflow: hidden;
@@ -42,14 +46,18 @@ td.usercolor {
     background-color: var(--usercolor);
 }
 
-.clickable {
+table.loaded th[data-variant] {
     cursor: pointer;
 }
 
-.clickable:hover {
+table.loaded th[data-variant]:hover *:not(.variant-indicator) {
     text-decoration: underline;
 }
 
-th.current-variant::before {
-    content: '↑ ';
+.variant-indicator {
+    visibility: hidden;
+}
+
+.current-variant .variant-indicator {
+    visibility: visible;
 }

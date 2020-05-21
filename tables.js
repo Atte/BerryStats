@@ -41,11 +41,11 @@ function getVideoLink(vid, timeStr=null) {
 function renderTable(table, data) {
     const tbody = table.querySelector('tbody');
     const rowTemplate = document.querySelector(`template[data-action="${table.dataset.action}"]`);
+    tbody.innerHTML = '';
 
-    // placeholder rows
+    // no data -> render placeholder rows
     if (!data) {
-        tbody.innerHTML = '';
-        for (let index = 0; index < 10; ++index) {
+        for (let index = 0; index < parseInt(table.dataset.rows || 10, 10); ++index) {
             const row = rowTemplate.content.cloneNode(true);
             row.querySelector('th').textContent = index + 1;
             tbody.appendChild(row);
@@ -53,7 +53,6 @@ function renderTable(table, data) {
         return;
     }
 
-    tbody.innerHTML = '';
     for (const [index, el] of data.entries()) {
         const row = rowTemplate.content.cloneNode(true);
         row.querySelector('tr').dataset.id = el._id;
@@ -89,11 +88,13 @@ function renderTable(table, data) {
             }
 
             if (td.dataset.titleProp) {
-                td.title = el[td.dataset.titleProp];
+                td.title = el[td.dataset.titleProp] + (td.title || '');
             }
         }
         tbody.appendChild(row);
     }
+
+    table.classList.add('loaded');
 }
 
 async function initTable(table) {
@@ -114,9 +115,7 @@ async function initTable(table) {
             table.dataset.variant = th.dataset.variant;
             renderTable(table, data[table.dataset.variant]);
 
-            for (const other of table.querySelectorAll('thead .current-variant')) {
-                other.classList.remove('current-variant');
-            }
+            th.parentNode.querySelector('th.current-variant').classList.remove('current-variant');
             th.classList.add('current-variant');
         });
     } else {

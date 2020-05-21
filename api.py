@@ -14,6 +14,8 @@ with open('.mongourl') as fh:
 # from https://github.com/BTDev/Berrymotes/blob/master/js/berrymotes.core.js
 EMOTE_REGEX = r'\[([^\]]*)\]\(\/([\w:!#\/]+)([-\w!]*)([^)]*)\)'
 
+URL_REGEX = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
+
 def handle_usercolors(environ, start_response):
     response = requests.get('https://btc.berrytube.tv/wut/wutColors/usercolors.js')
     response.raise_for_status()
@@ -57,6 +59,27 @@ ACTIONS = {
             } },
         ] + suffix()
     },
+    'links': {
+        'collection': 'chatMsg',
+        'pipeline': [
+            { '$match': { 'msg.emote': False } },
+            { '$project': {
+                '_id': False,
+                '_time': True,
+                'links': { '$regexFindAll': {
+                    'input': '$msg.msg',
+                    'regex': URL_REGEX,
+                    'options': 'i',
+                } },
+            } },
+            { '$unwind': '$links' },
+            { '$group': {
+                '_id': '$links.match',
+                'count': { '$sum': 1 },
+                'latest': { '$max': '$_time' },
+            } },
+        ] + suffix()
+    },
     'emotes': {
         'collection': 'chatMsg',
         'pipeline': [
@@ -79,7 +102,7 @@ ACTIONS = {
     },
     'chatters': {
         'collection': 'chatMsg',
-        'postprocess': next,
+        'postprocess': next, # pull variants to the top level
         'pipeline': [
             { '$match': { 'msg.emote': False } },
             { '$group': {
@@ -122,10 +145,16 @@ ACTIONS = {
                 'favCount': { '$first': '$favCount' },
                 'fav': { '$first': '$_id.fav' },
             } },
+            { '$set': {
+                'avgCharacters': { '$round': [
+                    { '$divide': ['$characters', '$lines'] },
+                ] },
+            } },
+            # variants:
             { '$facet': {
-                'lines': suffix('lines'),
-                'characters': suffix('characters'),
-                'emotes': suffix('emotes'),
+                'lines': suffix('lines', 21),
+                'characters': suffix('characters', 21),
+                'emotes': suffix('emotes', 21),
             } },
         ]
     },
