@@ -25,7 +25,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Weekly BerryTube Statistics</h1>
+        <h1 class="d-sm-none">Weekly BT Stats</h1>
+        <h1 class="d-none d-sm-block">Weekly BerryTube Statistics</h1>
 
         <!-- connected -->
         <div id="connected"></div>
@@ -34,14 +35,14 @@
 
             <div class="col-12 col-lg-8">
                 <!-- chatters -->
-                <table data-action="chatters" data-variant="lines" data-rows="21" class="table">
+                <table data-action="chatters" data-variant="lines" data-rows="21" class="table table-responsive-lg">
                     <thead>
                         <tr>
                             <th scope="col" class="num">#</th>
                             <th scope="col" class="widen" colspan="2">Nick</th>
                             <th scope="col" class="num current-variant" data-variant="lines">
                                 <span class="variant-indicator">↑</span>
-                                <span>Lines</span>
+                                <span>Messages</span>
                             </th>
                             <th scope="col" class="num" data-variant="characters">
                                 <span class="variant-indicator">↑</span>
@@ -62,8 +63,8 @@
                         <td data-prop="_id" class="usercolor"><div>&nbsp;</div></td>
                         <td data-prop="_id" class="widen"></td>
                         <td data-prop="lines" class="num"></td>
-                        <td data-prop="characters" class="num" data-title-prop="avgCharacters" title=" characters per line"></td>
-                        <td data-prop="emotes" class="num"></td>
+                        <td data-prop="characters" class="num" data-title-prop="avgCharacters" title=" characters per message"></td>
+                        <td data-prop="emotes" class="num" data-title-prop="avgEmotes" title=" emotes per message"></td>
                         <td data-prop="fav" class="emote" data-title-prop="favCount" title=" uses"></td>
                     </tr>
                 </template>
@@ -71,7 +72,7 @@
 
             <div class="col-12 col-lg-4">
                 <div class="row">
-                    <div class="col-12 col-sm-6 col-lg-12">
+                    <div class="col-12 col-md-6 col-lg-12">
                         <!-- emotes -->
                         <table data-action="emotes" class="table mb-lg-0">
                             <thead>
@@ -93,7 +94,7 @@
                         </template>
                     </div>
 
-                    <div class="col-12 col-sm-6 col-lg-12">
+                    <div class="col-12 col-md-6 col-lg-12">
                         <!-- drinks -->
                         <table data-action="drinks" class="table">
                             <thead>

@@ -149,6 +149,10 @@ ACTIONS = {
                 'avgCharacters': { '$round': [
                     { '$divide': ['$characters', '$lines'] },
                 ] },
+                'avgEmotes': { '$round': [
+                    { '$divide': ['$emotes', '$lines'] },
+                    2,
+                ] },
             } },
             # variants:
             { '$facet': {

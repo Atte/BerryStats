@@ -3,15 +3,17 @@
     height: 200px;
 }
 
+table:not(.loaded) {
+    pointer-events: none;
+    opacity: 50%;
+}
+
 .table thead th {
     border-top: none;
 }
 
-th,
-td {
-    overflow: hidden;
+th, td.num {
     white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 th.widen,
@@ -46,11 +48,11 @@ td.usercolor {
     background-color: var(--usercolor);
 }
 
-table.loaded th[data-variant] {
+th[data-variant] {
     cursor: pointer;
 }
 
-table.loaded th[data-variant]:hover *:not(.variant-indicator) {
+th[data-variant]:hover *:not(.variant-indicator) {
     text-decoration: underline;
 }
 
