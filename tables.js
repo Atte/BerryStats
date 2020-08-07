@@ -38,6 +38,44 @@ function getVideoLink(vid, timeStr=null) {
     }
 }
 
+const postprocess = {
+    chatters({ table, tbody, data }) {
+        const row = tbody.querySelector('tr:last-child');
+
+        const input = document.createElement('input');
+        input.className = 'form-control form-control-sm';
+        input.placeholder = 'Write nickname and press enter';
+        input.value = row.querySelector('td.nick').textContent;
+
+        input.addEventListener('focus', () => {
+            input.select();
+        });
+
+        input.addEventListener('keypress', async event => {
+            if (event.key !== 'Enter') {
+                return;
+            }
+
+            event.preventDefault();
+            input.disabled = true;
+
+            const response = await fetch('api.py?action=chatters&nick=' + encodeURIComponent(input.value));
+            const nickData = await response.json();
+
+            if (nickData && nickData.lines && nickData.lines[0]) {
+                nickData.lines[0].index = '??';
+                renderTable(table, data.slice(0, 20).concat(nickData.lines));
+            } else {
+                input.value = '';
+                input.disabled = false;
+            }
+        });
+
+        row.querySelector('td.nick').innerHTML = '';
+        row.querySelector('td.nick').appendChild(input);
+    }
+};
+
 function renderTable(table, data) {
     const tbody = table.querySelector('tbody');
     const rowTemplate = document.querySelector(`template[data-action="${table.dataset.action}"]`);
@@ -56,7 +94,7 @@ function renderTable(table, data) {
     for (const [index, el] of data.entries()) {
         const row = rowTemplate.content.cloneNode(true);
         row.querySelector('tr').dataset.id = el._id;
-        row.querySelector('th').textContent = index + 1;
+        row.querySelector('th').textContent = el.index || (index + 1);
 
         for (const td of row.querySelectorAll('td[data-prop]')) {
             const value = td.dataset.value = el[td.dataset.prop];
@@ -92,6 +130,10 @@ function renderTable(table, data) {
             }
         }
         tbody.appendChild(row);
+    }
+
+    if (postprocess.hasOwnProperty(table.dataset.action)) {
+        postprocess[table.dataset.action]({ table, tbody, rowTemplate, data });
     }
 
     table.classList.add('loaded');

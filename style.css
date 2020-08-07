@@ -63,3 +63,7 @@ th[data-variant]:hover *:not(.variant-indicator) {
 .current-variant .variant-indicator {
     visibility: visible;
 }
+
+td.nick input {
+    margin-top: -2px;
+}
